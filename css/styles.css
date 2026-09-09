@@ -336,11 +336,31 @@ section {
   margin-bottom: 28px;
 }
 
-.platforms-strip img {
-  display: block;
-  max-width: 640px;
-  width: 100%;
-  margin: 0 auto;
+.platform-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.platform-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.platform-item img {
+  height: 34px;
+  width: auto;
+}
+
+.platform-item span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
 }
 
 /* ---------- Cards / Grids ---------- */
