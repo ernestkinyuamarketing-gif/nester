@@ -14,6 +14,7 @@ Nester/
 ├── case-studies.html    Case studies / results page
 ├── about.html            About / founder page
 ├── contact.html          Contact form page
+├── privacy.html           Privacy Policy
 ├── 404.html               Custom "page not found" page
 ├── css/styles.css        All styling (colors, fonts, layout)
 ├── js/main.js             Nav, scroll reveal, counters, FAQ/testimonial UI, contact form
@@ -21,10 +22,11 @@ Nester/
 ├── sitemap.xml            Page listing for search engines
 ├── site.webmanifest       "Add to home screen" icon/name config
 ├── netlify.toml           Security headers, caching rules, publish settings
-└── assets/images/         Logo, favicon, and OG/social share images
+└── assets/images/         Logo, favicon, founder photo, and OG/social share images
     ├── nester-logo-full.png    Master brand image (icon + wordmark + tagline + platform strip)
     ├── nester-icon.png         Cropped icon mark, used in the nav bar
-    ├── platforms-strip.png     Cropped "platforms we advertise on" row, used on the home page
+    ├── platform-*.png          Individual platform icons (Google/Meta/Bing/TikTok/YouTube/LinkedIn) for the home page marquee
+    ├── founder-photo.jpg       About page founder photo
     ├── favicon.png / favicon-32.png / apple-touch-icon.png   Browser tab & home-screen icons
     └── og-image.png            1200×630 image shown when the site is shared on social media
 ```
@@ -41,24 +43,38 @@ npx serve .
 
 then open the URL it prints (usually `http://localhost:3000`).
 
-## What to customize before launch
+## Launch checklist
 
-- **Case study metrics** — `case-studies.html` and the "Recent client wins" section of `index.html` use illustrative sample numbers (ROAS, CPA, etc.), not real results. Replace with your actual campaign results when ready.
-- **Client naming** — since client names usually can't be disclosed, each case study is labeled with an anonymized descriptor instead of a real or fake company name (e.g. "European Fashion Retailer" with a "Name withheld under NDA" note). This is intentional — don't invent fictional company names to fill these in; presenting a made-up company as if it's real risks looking deceptive if a prospect tries to verify it. Feel free to adjust the descriptors (industry/size/region) to match your real client work as long as they stay non-identifying.
-- **Founder bio & photo** — `about.html` has a placeholder bio and photo box. Add your name, background, and a real photo in `assets/images/`.
-- **Testimonials** — `index.html` has three testimonial quotes attributed by role + anonymized company type (e.g. "Head of Growth, DTC Skincare Brand"), not real quotes yet. Swap in real client quotes when available, keeping names anonymized the same way if needed.
+**Done:**
+- Real logo, favicon, OG image, founder photo, contact email, and social links (LinkedIn, Facebook, X)
+- Working contact form (Netlify Forms) with spam protection and email notifications already turned on
+- "Book a Call" (Calendly) — floating badge site-wide, plus a dedicated button on the Contact page
+- Privacy Policy (`privacy.html`), linked in every page's footer
+- EU-targeted SEO: titles, descriptions, Open Graph, structured data, sitemap, robots.txt
+- Accessibility basics, custom 404 page, security headers
 
-Already set: contact email (`ernestkinyua.marketing@gmail.com`), LinkedIn, Facebook, and X links across the footer and `contact.html`; the "platforms we advertise on" marquee on the home page (real, not placeholder).
+**Still open (your call, not blocking a soft launch):**
+- **Case study metrics** — `case-studies.html` and the "Recent client wins" section of `index.html` use illustrative sample numbers (ROAS, CPA, etc.), not real results yet. Replace with your actual campaign results when ready.
+- **Client naming** — since client names usually can't be disclosed, each case study uses an anonymized descriptor instead of a real or fake company name (e.g. "European Fashion Retailer" with a "Name withheld under NDA" note) — intentional, don't replace these with invented company names (see note below).
+- **Testimonials** — `index.html` has three testimonial quotes attributed by role + anonymized company type, not real quotes yet. Swap in real ones when available.
+- **Custom domain** — the site runs on `nester-agency.netlify.app`. A real domain (e.g. `nesteragency.com`) is more trustworthy to visitors and Google, and only you can purchase one.
+- **Google Search Console** — submit `sitemap.xml` there once you're ready to be indexed; this is what actually gets the site found on Google, code alone doesn't do it.
+- **Analytics** — no visitor tracking is set up. Consider Google Analytics or a privacy-friendly option like Plausible if you want to see traffic; if you add one, update `privacy.html` to disclose it.
+
+A note on client naming: don't invent fictional company names to fill in case studies. Presenting a made-up company as if it's real risks looking deceptive if a prospect tries to verify it — anonymized descriptors (industry + region) are the honest, standard approach.
 
 ## The contact form works — here's how to see submissions
 
-The form on `contact.html` is wired up to **Netlify Forms** (`data-netlify="true"` plus a hidden honeypot field for spam protection) and submits over AJAX so visitors never leave the page. To see and manage submissions:
+The form on `contact.html` is wired up to **Netlify Forms** (`data-netlify="true"` plus a hidden honeypot field for spam protection) and submits over AJAX so visitors never leave the page.
 
-1. Log into Netlify and open the `nester-agency` site.
-2. Go to **Site settings → Forms** — every submission appears there automatically once the form has been part of a deploy (already done).
-3. Turn on **email notifications** under Forms → Notifications so each submission also lands in your inbox.
+- **Dashboard:** log into Netlify → `nester-agency` site → **Site settings → Forms** to see every submission.
+- **Email notifications:** already turned on — new submissions are emailed to `ernestkinyua.marketing@gmail.com` automatically.
 
 No third-party service (Formspree etc.) is needed — this is built into Netlify's free tier.
+
+## Booking calls (Calendly)
+
+A "Book a Call" floating badge (bottom-right) appears on every page, plus a dedicated button on the Contact page — both open your Calendly scheduler (`https://calendly.com/ernestkinyua-marketing/interview-meeting`) in a popup without leaving the site. To change the link, search for that URL in each `.html` file's `<script>` block near the bottom, plus the button in `contact.html`.
 
 ## Extra features already built in
 
@@ -68,7 +84,8 @@ No third-party service (Formspree etc.) is needed — this is built into Netlify
 - **404 page:** a branded "page not found" page (`404.html`) instead of a generic browser error.
 - **Back-to-top button & mobile "Book a Free Audit" bar:** small conversion/usability aids that appear on scroll and on mobile.
 - **Security headers & caching:** `netlify.toml` sets `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy`, plus sensible cache lifetimes for images/CSS/JS.
-- **Honest platform strip:** the old "fake client logos" placeholder on the home page was replaced with a real "platforms we advertise across" row (Google, Meta, Bing, TikTok, YouTube, LinkedIn) cropped from your logo artwork — no fabricated trust signals.
+- **Honest platform strip:** the old "fake client logos" placeholder on the home page was replaced with a real, animated "platforms we advertise across" marquee (Google, Meta, Bing, TikTok, YouTube, LinkedIn) cropped from your logo artwork — no fabricated trust signals.
+- **Founder credibility:** About page has your real photo and a bio built around your Google Ads / Meta Ads experience; also included in the site's structured data (`founder` field) for SEO.
 
 ## SEO — what's been done, and what still matters
 

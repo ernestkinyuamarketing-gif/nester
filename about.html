@@ -31,6 +31,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 
 <script type="application/ld+json">
 {
@@ -43,6 +44,14 @@
   "image": "https://nester-agency.netlify.app/assets/images/og-image.png",
   "description": "Performance-driven media buying agency managing Google, Meta, TikTok, Bing, YouTube and LinkedIn ad campaigns for brands across Europe.",
   "email": "ernestkinyua.marketing@gmail.com",
+  "founder": {
+    "@type": "Person",
+    "name": "Ernest Kinyua",
+    "jobTitle": "Founder",
+    "sameAs": [
+      "https://www.linkedin.com/in/ernest-mutwiri-5393003a9"
+    ]
+  },
   "areaServed": [
     { "@type": "Place", "name": "European Union" },
     { "@type": "Country", "name": "Germany" },
@@ -112,10 +121,10 @@
       <p style="color:var(--color-text-muted); font-size:1.05rem;">We work as an extension of your team: transparent about what's working, honest about what isn't, and fast to react to the data.</p>
     </div>
     <div class="founder-card">
-      <div class="founder-photo">Founder photo goes here</div>
-      <h3 style="margin-bottom:6px;">Founder Name</h3>
-      <p style="color:var(--color-text-muted); font-size:0.9rem;">Founder &amp; Media Buyer, Nester</p>
-      <p style="color:var(--color-text-muted); font-size:0.9rem; margin-top:12px;">Add a short bio here: background in paid media, platforms you specialize in, and the results you're known for.</p>
+      <img src="assets/images/founder-photo.jpg" alt="Ernest Kinyua, Founder of Nester" class="founder-photo" width="880" height="1320" loading="lazy">
+      <h3 style="margin-bottom:6px;">Ernest Kinyua</h3>
+      <p style="color:var(--color-text-muted); font-size:0.9rem;">Founder, Nester</p>
+      <p style="color:var(--color-text-muted); font-size:0.9rem; margin-top:12px;">Ernest has spent his career inside Google Ads and Meta Ads accounts — first in-house, managing budgets from the client side, then agency-side, running paid media for brands across multiple industries. That dual perspective shapes how Nester operates: less agency theater, more of what actually moves revenue. He's built and scaled campaigns across Search, Shopping, Meta, and TikTok, with a track record of turning ad spend into predictable, defensible ROAS rather than vanity metrics.</p>
     </div>
   </div>
 </section>
@@ -209,6 +218,7 @@
         <ul>
           <li><a href="mailto:ernestkinyua.marketing@gmail.com">ernestkinyua.marketing@gmail.com</a></li>
           <li><a href="contact.html">Get a proposal</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
         </ul>
       </div>
     </div>
@@ -228,5 +238,19 @@
 </button>
 
 <script src="js/main.js"></script>
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" defer></script>
+<script>
+  window.addEventListener('load', function () {
+    if (window.Calendly) {
+      Calendly.initBadgeWidget({
+        url: 'https://calendly.com/ernestkinyua-marketing/interview-meeting',
+        text: 'Book a Call',
+        color: '#f97316',
+        textColor: '#ffffff',
+        branding: true
+      });
+    }
+  });
+</script>
 </body>
 </html>

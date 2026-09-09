@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 </head>
 <body>
 
@@ -90,6 +91,7 @@
         <ul>
           <li><a href="mailto:ernestkinyua.marketing@gmail.com">ernestkinyua.marketing@gmail.com</a></li>
           <li><a href="contact.html">Get a proposal</a></li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
         </ul>
       </div>
     </div>
@@ -101,5 +103,19 @@
 </footer>
 
 <script src="js/main.js"></script>
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" defer></script>
+<script>
+  window.addEventListener('load', function () {
+    if (window.Calendly) {
+      Calendly.initBadgeWidget({
+        url: 'https://calendly.com/ernestkinyua-marketing/interview-meeting',
+        text: 'Book a Call',
+        color: '#f97316',
+        textColor: '#ffffff',
+        branding: true
+      });
+    }
+  });
+</script>
 </body>
 </html>
