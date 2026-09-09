@@ -43,14 +43,12 @@ then open the URL it prints (usually `http://localhost:3000`).
 
 ## What to customize before launch
 
-Search each file for these placeholders and replace them with real content:
-
-- **Client names & results** — `case-studies.html` and the "Recent client wins" section of `index.html` use `Client Name` and sample metrics (ROAS, CPA, etc.). Replace with real campaign results once you have them, or keep believable placeholders clearly marked until then.
+- **Case study metrics** — `case-studies.html` and the "Recent client wins" section of `index.html` use illustrative sample numbers (ROAS, CPA, etc.), not real results. Replace with your actual campaign results when ready.
+- **Client naming** — since client names usually can't be disclosed, each case study is labeled with an anonymized descriptor instead of a real or fake company name (e.g. "European Fashion Retailer" with a "Name withheld under NDA" note). This is intentional — don't invent fictional company names to fill these in; presenting a made-up company as if it's real risks looking deceptive if a prospect tries to verify it. Feel free to adjust the descriptors (industry/size/region) to match your real client work as long as they stay non-identifying.
 - **Founder bio & photo** — `about.html` has a placeholder bio and photo box. Add your name, background, and a real photo in `assets/images/`.
-- **Testimonial** — `index.html` has one placeholder quote; swap in a real client quote when available.
-- **Client logos** — the "Trusted by" strip on the home page uses text placeholders; replace with real logo images once you can name clients (or remove the section until then).
+- **Testimonials** — `index.html` has three testimonial quotes attributed by role + anonymized company type (e.g. "Head of Growth, DTC Skincare Brand"), not real quotes yet. Swap in real client quotes when available, keeping names anonymized the same way if needed.
 
-Already set: contact email (`ernestkinyua.marketing@gmail.com`), LinkedIn, Facebook, and X links across the footer and `contact.html`.
+Already set: contact email (`ernestkinyua.marketing@gmail.com`), LinkedIn, Facebook, and X links across the footer and `contact.html`; the "platforms we advertise on" marquee on the home page (real, not placeholder).
 
 ## The contact form works — here's how to see submissions
 

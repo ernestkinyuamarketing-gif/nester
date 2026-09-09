@@ -517,6 +517,12 @@ section {
   font-size: 1.3rem;
 }
 
+.case-client-note {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 4px;
+}
+
 .case-card-body {
   padding: 28px 32px;
   flex: 1;
