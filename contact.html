@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Nester</title>
+<meta name="description" content="Get in touch with Nester to book a free paid media audit for your brand.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav">
+    <a href="index.html" class="logo">Nest<span>er</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="case-studies.html">Case Studies</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="contact.html" class="btn btn-secondary">Get a Proposal</a>
+      <button class="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<section class="hero" style="padding: 88px 0 72px;">
+  <div class="container" style="grid-template-columns: 1fr; text-align:left;">
+    <div>
+      <p class="eyebrow" style="color:#93c5fd;">Contact</p>
+      <h1>Let's talk about your ad spend.</h1>
+      <p>Tell us a bit about your brand and current campaigns. We'll follow up within one business day with next steps for your free audit.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container contact-layout">
+
+    <div>
+      <div class="contact-info-item">
+        <h4>Email</h4>
+        <a href="mailto:hello@nesteragency.com">hello@nesteragency.com</a>
+      </div>
+      <div class="contact-info-item">
+        <h4>Response Time</h4>
+        <p>Within 1 business day</p>
+      </div>
+      <div class="contact-info-item">
+        <h4>Follow</h4>
+        <div class="social-links">
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="Instagram">ig</a>
+          <a href="#" aria-label="X / Twitter">x</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div id="form-success" class="form-success">Thanks — your message has been received. We'll be in touch within one business day.</div>
+      <form id="contact-form">
+        <div class="form-row">
+          <div class="field">
+            <label for="name">Full name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="company">Company</label>
+            <input type="text" id="company" name="company">
+          </div>
+          <div class="field">
+            <label for="budget">Monthly ad budget</label>
+            <select id="budget" name="budget">
+              <option value="">Select a range</option>
+              <option value="under-5k">Under $5,000</option>
+              <option value="5k-15k">$5,000 – $15,000</option>
+              <option value="15k-50k">$15,000 – $50,000</option>
+              <option value="50k-plus">$50,000+</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="message">Tell us about your goals</label>
+          <textarea id="message" name="message" rows="5"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+        <p class="form-note">This form is a static demo. To receive real submissions, connect it to a form backend such as Formspree or Netlify Forms — see README.md for setup steps.</p>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">Nest<span>er</span></a>
+        <p>A performance-driven media buying agency helping brands turn ad spend into predictable, measurable growth.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Site</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="case-studies.html">Case Studies</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="services.html">Paid Social</a></li>
+          <li><a href="services.html">Paid Search</a></li>
+          <li><a href="services.html">Programmatic</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:hello@nesteragency.com">hello@nesteragency.com</a></li>
+          <li><a href="contact.html">Get a proposal</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Nester. All rights reserved.</span>
+      <span>Built with intent.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
