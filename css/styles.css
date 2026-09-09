@@ -186,6 +186,9 @@ section {
 }
 
 .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-family: var(--font-heading);
   font-size: 1.4rem;
   font-weight: 700;
@@ -193,8 +196,14 @@ section {
   color: var(--color-dark);
 }
 
-.logo span {
+.logo-text span {
   color: var(--color-primary);
+}
+
+.logo-icon {
+  height: 34px;
+  width: auto;
+  display: block;
 }
 
 .nav-links {
@@ -690,11 +699,33 @@ section {
   align-items: center;
   justify-content: center;
   font-size: 0.85rem;
+  color: var(--color-text);
   transition: background var(--transition), color var(--transition);
 }
 
 .social-links a:hover {
   background: var(--color-dark);
+  color: #fff;
+}
+
+.social-links a svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.footer-brand .social-links {
+  margin-top: 20px;
+}
+
+.footer-brand .social-links a {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: rgba(226, 232, 240, 0.85);
+}
+
+.footer-brand .social-links a:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
   color: #fff;
 }
 
