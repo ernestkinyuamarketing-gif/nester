@@ -13,6 +13,7 @@
 <link rel="icon" type="image/png" href="assets/images/favicon-32.png" sizes="32x32">
 <link rel="icon" type="image/png" href="assets/images/favicon.png" sizes="512x512">
 <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Nester">
@@ -62,13 +63,25 @@
   "serviceType": ["Paid Social Advertising", "Paid Search Advertising", "Programmatic Advertising", "Creative Strategy", "Analytics & Attribution", "Conversion Rate Optimization"]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://nester-agency.netlify.app/" },
+    { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://nester-agency.netlify.app/services.html" }
+  ]
+}
+</script>
 </head>
 <body>
+
+<a href="#main-content" class="skip-link">Skip to main content</a>
 
 <header class="site-header">
   <nav class="nav">
     <a href="index.html" class="logo"><img src="assets/images/nester-icon.png" alt="Nester Agency logo" class="logo-icon"><span class="logo-text">Nest<span>er</span></span></a>
-    <ul class="nav-links">
+    <ul class="nav-links" id="primary-navigation">
       <li><a href="index.html">Home</a></li>
       <li><a href="services.html" class="active">Services</a></li>
       <li><a href="case-studies.html">Case Studies</a></li>
@@ -77,16 +90,22 @@
     </ul>
     <div class="nav-cta">
       <a href="contact.html" class="btn btn-secondary">Get a Proposal</a>
-      <button class="nav-toggle" aria-label="Toggle menu">
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="primary-navigation">
         <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
 </header>
 
-<section class="hero" style="padding: 88px 0 72px;">
+<section class="hero" id="main-content" style="padding: 88px 0 72px;">
   <div class="container" style="grid-template-columns: 1fr; text-align:left;">
     <div>
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="index.html">Home</a></li>
+          <li aria-current="page">Services</li>
+        </ol>
+      </nav>
       <p class="eyebrow" style="color:#93c5fd;">Services</p>
       <h1>Media buying, handled end to end.</h1>
       <p>Every engagement with our media buying agency is built around one goal: turning your ad spend into a predictable, measurable return for brands across Europe. Here's exactly what that looks like.</p>
@@ -245,6 +264,14 @@
     </div>
   </div>
 </footer>
+
+<div class="mobile-cta-bar">
+  <a href="contact.html" class="btn btn-primary">Book a Free Audit</a>
+</div>
+
+<button class="back-to-top" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
 
 <script src="js/main.js"></script>
 </body>

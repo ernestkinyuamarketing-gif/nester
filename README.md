@@ -14,13 +14,17 @@ Nester/
 ├── case-studies.html    Case studies / results page
 ├── about.html            About / founder page
 ├── contact.html          Contact form page
+├── 404.html               Custom "page not found" page
 ├── css/styles.css        All styling (colors, fonts, layout)
-├── js/main.js             Mobile nav, scroll animations, form demo
+├── js/main.js             Nav, scroll reveal, counters, FAQ/testimonial UI, contact form
 ├── robots.txt             Search engine crawl rules
 ├── sitemap.xml            Page listing for search engines
+├── site.webmanifest       "Add to home screen" icon/name config
+├── netlify.toml           Security headers, caching rules, publish settings
 └── assets/images/         Logo, favicon, and OG/social share images
     ├── nester-logo-full.png    Master brand image (icon + wordmark + tagline + platform strip)
     ├── nester-icon.png         Cropped icon mark, used in the nav bar
+    ├── platforms-strip.png     Cropped "platforms we advertise on" row, used on the home page
     ├── favicon.png / favicon-32.png / apple-touch-icon.png   Browser tab & home-screen icons
     └── og-image.png            1200×630 image shown when the site is shared on social media
 ```
@@ -48,14 +52,25 @@ Search each file for these placeholders and replace them with real content:
 
 Already set: contact email (`ernestkinyua.marketing@gmail.com`), LinkedIn, Facebook, and X links across the footer and `contact.html`.
 
-## Making the contact form actually send emails
+## The contact form works — here's how to see submissions
 
-The form on `contact.html` currently only shows a "message received" confirmation locally — it doesn't send anywhere. Since this is a static site (no backend server), the easiest fix is a free form service:
+The form on `contact.html` is wired up to **Netlify Forms** (`data-netlify="true"` plus a hidden honeypot field for spam protection) and submits over AJAX so visitors never leave the page. To see and manage submissions:
 
-1. Sign up at [Formspree](https://formspree.io) (or Netlify Forms if you deploy to Netlify).
-2. Get your form endpoint URL.
-3. In `contact.html`, change `<form id="contact-form">` to `<form id="contact-form" action="https://formspree.io/f/YOUR_ID" method="POST">`.
-4. Remove or keep the JS success message as you prefer — Formspree can also redirect to a thank-you page.
+1. Log into Netlify and open the `nester-agency` site.
+2. Go to **Site settings → Forms** — every submission appears there automatically once the form has been part of a deploy (already done).
+3. Turn on **email notifications** under Forms → Notifications so each submission also lands in your inbox.
+
+No third-party service (Formspree etc.) is needed — this is built into Netlify's free tier.
+
+## Extra features already built in
+
+- **Accessibility:** a "skip to main content" link, visible focus outlines, ARIA labels on the mobile menu button, and a native `<details>`-based FAQ accordion that works without JavaScript.
+- **Animated stats & FAQ:** the hero numbers count up when scrolled into view; the homepage FAQ section also carries `FAQPage` structured data for Google's rich-result snippets.
+- **Breadcrumbs:** every inner page shows a Home / [Page] trail, with matching `BreadcrumbList` structured data.
+- **404 page:** a branded "page not found" page (`404.html`) instead of a generic browser error.
+- **Back-to-top button & mobile "Book a Free Audit" bar:** small conversion/usability aids that appear on scroll and on mobile.
+- **Security headers & caching:** `netlify.toml` sets `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy`, plus sensible cache lifetimes for images/CSS/JS.
+- **Honest platform strip:** the old "fake client logos" placeholder on the home page was replaced with a real "platforms we advertise across" row (Google, Meta, Bing, TikTok, YouTube, LinkedIn) cropped from your logo artwork — no fabricated trust signals.
 
 ## SEO — what's been done, and what still matters
 
