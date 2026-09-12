@@ -76,6 +76,10 @@ No third-party service (Formspree etc.) is needed — this is built into Netlify
 
 A "Book a Call" floating badge (bottom-right) appears on every page, plus a dedicated button on the Contact page — both open your Calendly scheduler (`https://calendly.com/ernestkinyua-marketing/interview-meeting`) in a popup without leaving the site. To change the link, search for that URL in each `.html` file's `<script>` block near the bottom, plus the button in `contact.html`.
 
+## WhatsApp
+
+A "Message on WhatsApp" button sits on the Contact page (with a pre-filled greeting), and a WhatsApp icon is in the footer's social row on every page, linking to `https://wa.me/254720262499`. To change the number, search for `254720262499` across the `.html` files.
+
 ## Extra features already built in
 
 - **Accessibility:** a "skip to main content" link, visible focus outlines, ARIA labels on the mobile menu button, and a native `<details>`-based FAQ accordion that works without JavaScript.

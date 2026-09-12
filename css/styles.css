@@ -162,6 +162,22 @@ section {
   background: var(--color-text-inverse);
 }
 
+.btn-whatsapp {
+  background: #25d366;
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-whatsapp:hover {
+  background: #1da851;
+}
+
+.btn-whatsapp svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
 .btn-block {
   width: 100%;
 }
@@ -627,9 +643,6 @@ section {
 }
 
 .founder-spotlight {
-  display: flex;
-  gap: 36px;
-  align-items: flex-start;
   background: var(--color-bg-alt);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
@@ -637,7 +650,25 @@ section {
   margin-top: 48px;
 }
 
-.founder-spotlight .founder-photo {
+.founder-heading h3 {
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+}
+
+.founder-title {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+.founder-top {
+  display: flex;
+  gap: 36px;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.founder-top .founder-photo {
   width: 240px;
   flex-shrink: 0;
   height: auto;
@@ -648,15 +679,8 @@ section {
   display: block;
 }
 
-.founder-details h3 {
-  font-size: 1.3rem;
-  margin-bottom: 4px;
-}
-
-.founder-title {
-  color: var(--color-text-muted);
-  font-size: 0.95rem;
-  margin-bottom: 20px;
+.founder-quote-block {
+  flex: 1;
 }
 
 .founder-quote-label {
@@ -671,7 +695,7 @@ section {
 .founder-quote {
   border-left: 3px solid var(--color-accent);
   padding-left: 16px;
-  margin: 0 0 20px;
+  margin: 0;
 }
 
 .founder-quote p {
@@ -695,11 +719,12 @@ section {
 }
 
 @media (max-width: 720px) {
-  .founder-spotlight {
+  .founder-top {
     flex-direction: column;
+    align-items: flex-start;
   }
 
-  .founder-spotlight .founder-photo {
+  .founder-top .founder-photo {
     width: 100%;
     max-width: 280px;
   }
