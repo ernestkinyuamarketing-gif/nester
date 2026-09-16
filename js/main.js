@@ -98,21 +98,28 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Contact form — submits to Netlify Forms via AJAX so the page never reloads
+  // Contact form — submits to Web3Forms via AJAX so the page never reloads
   const form = document.getElementById("contact-form");
   if (form) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
+
+      // Honeypot: if the hidden field got filled in, it's a bot — drop the submission silently
+      const honeypot = form.querySelector('[name="botcheck"]');
+      if (honeypot && honeypot.value) return;
+
       const data = new FormData(form);
       const submitBtn = form.querySelector('button[type="submit"]');
       if (submitBtn) submitBtn.disabled = true;
 
-      fetch("/", {
+      fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(data).toString(),
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(Object.fromEntries(data)),
       })
-        .then(() => {
+        .then((res) => res.json())
+        .then((result) => {
+          if (!result.success) throw new Error(result.message || "Submission failed");
           document.getElementById("form-success").classList.add("visible");
           form.reset();
           form.hidden = true;

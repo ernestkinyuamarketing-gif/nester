@@ -2,7 +2,7 @@
 
 A simple static site (plain HTML/CSS/JS, no build tools) for Nester, a paid media / media buying agency.
 
-- **Live site:** https://nester-agency.netlify.app
+- **Live site:** https://nesteragency.com
 - **GitHub repo:** https://github.com/ernestkinyuamarketing-gif/nester
 
 ## Structure
@@ -21,7 +21,7 @@ Nester/
 ├── robots.txt             Search engine crawl rules
 ├── sitemap.xml            Page listing for search engines
 ├── site.webmanifest       "Add to home screen" icon/name config
-├── netlify.toml           Security headers, caching rules, publish settings
+├── _headers               Cloudflare Pages security headers & caching rules
 └── assets/images/         Logo, favicon, founder photo, and OG/social share images
     ├── nester-logo-full.png    Master brand image (icon + wordmark + tagline + platform strip)
     ├── nester-icon.png         Cropped icon mark, used in the nav bar
@@ -47,7 +47,7 @@ then open the URL it prints (usually `http://localhost:3000`).
 
 **Done:**
 - Real logo, favicon, OG image, founder photo, contact email, and social links (LinkedIn, Facebook, X)
-- Working contact form (Netlify Forms) with spam protection and email notifications already turned on
+- Working contact form (Web3Forms) with spam protection and email notifications
 - "Book a Call" (Calendly) — floating badge site-wide, plus a dedicated button on the Contact page
 - Privacy Policy (`privacy.html`), linked in every page's footer
 - EU-targeted SEO: titles, descriptions, Open Graph, structured data, sitemap, robots.txt
@@ -57,20 +57,22 @@ then open the URL it prints (usually `http://localhost:3000`).
 - **Case study metrics** — `case-studies.html` and the "Recent client wins" section of `index.html` use illustrative sample numbers (ROAS, CPA, etc.), not real results yet. Replace with your actual campaign results when ready.
 - **Client naming** — since client names usually can't be disclosed, each case study uses an anonymized descriptor instead of a real or fake company name (e.g. "European Fashion Retailer" with a "Name withheld under NDA" note) — intentional, don't replace these with invented company names (see note below).
 - **Testimonials** — `index.html` has three testimonial quotes attributed by role + anonymized company type, not real quotes yet. Swap in real ones when available.
-- **Custom domain** — the site runs on `nester-agency.netlify.app`. A real domain (e.g. `nesteragency.com`) is more trustworthy to visitors and Google, and only you can purchase one.
+- **Web3Forms access key** — a key is already wired into `contact.html`. Rotate it any time by generating a new one at [web3forms.com](https://web3forms.com) and swapping the value in the hidden `access_key` field (see below).
 - **Google Search Console** — submit `sitemap.xml` there once you're ready to be indexed; this is what actually gets the site found on Google, code alone doesn't do it.
 - **Analytics** — no visitor tracking is set up. Consider Google Analytics or a privacy-friendly option like Plausible if you want to see traffic; if you add one, update `privacy.html` to disclose it.
 
 A note on client naming: don't invent fictional company names to fill in case studies. Presenting a made-up company as if it's real risks looking deceptive if a prospect tries to verify it — anonymized descriptors (industry + region) are the honest, standard approach.
 
-## The contact form works — here's how to see submissions
+## The contact form — one-time setup needed
 
-The form on `contact.html` is wired up to **Netlify Forms** (`data-netlify="true"` plus a hidden honeypot field for spam protection) and submits over AJAX so visitors never leave the page.
+The form on `contact.html` is wired up to **Web3Forms** (a free form-relay service) plus a hidden honeypot field for spam protection, and submits over AJAX so visitors never leave the page.
 
-- **Dashboard:** log into Netlify → `nester-agency` site → **Site settings → Forms** to see every submission.
-- **Email notifications:** already turned on — new submissions are emailed to `ernestkinyua.marketing@gmail.com` automatically.
+**To rotate the access key later:**
+1. Go to [web3forms.com](https://web3forms.com) and enter the email you want submissions sent to (`ernestkinyua.marketing@gmail.com`) to get a new free access key — no account/password needed.
+2. Open `contact.html`, find `<input type="hidden" name="access_key" value="...">`, and replace the value with the new key.
+3. Redeploy. Submissions will then arrive by email automatically; Web3Forms also keeps a dashboard of past submissions.
 
-No third-party service (Formspree etc.) is needed — this is built into Netlify's free tier.
+Web3Forms's free tier has no submission cap and needs no backend code, which is why it was chosen over alternatives like Formspree.
 
 ## Booking calls (Calendly)
 
@@ -87,7 +89,7 @@ A "Message on WhatsApp" button sits on the Contact page (with a pre-filled greet
 - **Breadcrumbs:** every inner page shows a Home / [Page] trail, with matching `BreadcrumbList` structured data.
 - **404 page:** a branded "page not found" page (`404.html`) instead of a generic browser error.
 - **Back-to-top button & mobile "Book a Free Audit" bar:** small conversion/usability aids that appear on scroll and on mobile.
-- **Security headers & caching:** `netlify.toml` sets `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy`, plus sensible cache lifetimes for images/CSS/JS.
+- **Security headers & caching:** `_headers` sets `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`, and `Permissions-Policy`, plus sensible cache lifetimes for images/CSS/JS (read automatically by Cloudflare Pages).
 - **Honest platform strip:** the old "fake client logos" placeholder on the home page was replaced with a real, animated "platforms we advertise across" marquee (Google, Meta, Bing, TikTok, YouTube, LinkedIn) cropped from your logo artwork — no fabricated trust signals.
 - **Founder credibility:** About page has your real photo and a bio built around your Google Ads / Meta Ads experience; also included in the site's structured data (`founder` field) for SEO.
 
@@ -99,7 +101,6 @@ Keywords were chosen around real search intent for this niche and region: things
 
 **Important — what on-page SEO can't do alone:** no amount of code changes will make a site "appear on top" by itself. That also depends on things outside the code:
 
-- **A custom domain.** `nester-agency.netlify.app` works, but a real domain (e.g. `nesteragency.com` or `.eu`) is far more trustworthy to both users and Google, and lets you use Google Search Console's country-targeting properly.
 - **Backlinks.** Sites linking to yours (directories, partner sites, press, guest posts) are one of the strongest ranking factors.
 - **Google Search Console + Google Business Profile.** Submitting the sitemap to Search Console and setting up a Business Profile (with EU country targeting) helps Google understand and rank the site faster.
 - **Real content over time.** Real case studies, a blog/insights section, and fresh updates outperform placeholder content — both for rankings and for visitor trust.
@@ -107,9 +108,6 @@ Keywords were chosen around real search intent for this niche and region: things
 
 None of this can be faked from inside the code — it's ongoing work once the site is live with real content.
 
-## Publishing the site (free options)
+## Publishing the site
 
-- **GitHub Pages** — push this folder to a GitHub repo, then enable Pages in the repo settings.
-- **Netlify** — drag and drop this folder into [netlify.com/drop](https://app.netlify.com/drop) for an instant live URL.
-
-Both are free and give you a live link you can share or point a custom domain at.
+This site is deployed on **Cloudflare Pages**, pointed at the custom domain `nesteragency.com` (bought separately and configured in the Cloudflare dashboard under the Pages project's **Custom domains** tab). No build command is needed — the framework preset is "None" and the build output directory is the repo root (`/`).

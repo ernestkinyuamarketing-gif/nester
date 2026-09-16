@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nester-agency.netlify.app/sitemap.xml
+Sitemap: https://nesteragency.com/sitemap.xml

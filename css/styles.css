@@ -638,6 +638,13 @@ section {
 }
 
 /* ---------- Founder / about ---------- */
+.about-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 460px) minmax(0, 1fr);
+  gap: 48px;
+  align-items: center;
+}
+
 .about-intro {
   max-width: 720px;
 }
@@ -647,7 +654,16 @@ section {
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 32px;
-  margin-top: 48px;
+}
+
+.founder-photo-col {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.founder-photo-col .founder-heading {
+  margin-top: 14px;
 }
 
 .founder-heading h3 {
@@ -658,13 +674,12 @@ section {
 .founder-title {
   color: var(--color-text-muted);
   font-size: 0.95rem;
-  margin-bottom: 24px;
 }
 
 .founder-top {
   display: flex;
   gap: 36px;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 24px;
 }
 
@@ -1236,7 +1251,8 @@ textarea:focus-visible {
 /* ---------- Responsive ---------- */
 @media (max-width: 960px) {
   .hero .container,
-  .contact-layout {
+  .contact-layout,
+  .about-hero-grid {
     grid-template-columns: 1fr;
   }
 
