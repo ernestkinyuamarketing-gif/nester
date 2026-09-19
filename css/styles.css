@@ -1348,3 +1348,76 @@ textarea:focus-visible {
     bottom: 88px;
   }
 }
+
+/* ---------- Blog post body (rendered from Notion content) ---------- */
+.post-body {
+  color: var(--color-text);
+  line-height: 1.75;
+  font-size: 1.02rem;
+}
+
+.post-body h2 {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  margin-top: 40px;
+  margin-bottom: 14px;
+}
+
+.post-body h3 {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  margin-top: 32px;
+  margin-bottom: 12px;
+}
+
+.post-body p {
+  margin-bottom: 18px;
+}
+
+.post-body ul,
+.post-body ol {
+  padding-left: 22px;
+  margin-bottom: 18px;
+}
+
+.post-body li {
+  margin-bottom: 8px;
+}
+
+.post-body a {
+  color: var(--color-primary);
+}
+
+.post-body img {
+  width: 100%;
+  border-radius: var(--radius);
+  margin: 24px 0;
+}
+
+.post-body blockquote {
+  border-left: 3px solid var(--color-accent);
+  padding-left: 16px;
+  margin: 24px 0;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.post-body pre {
+  background: var(--color-dark);
+  color: var(--color-text-inverse);
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-bottom: 18px;
+}
+
+.post-body code {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.9em;
+}
+
+.post-body p code {
+  background: var(--color-bg-alt);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
