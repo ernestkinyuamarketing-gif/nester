@@ -1305,7 +1305,6 @@ textarea:focus-visible {
   .grid-4,
   .grid-2,
   .process-steps,
-  .footer-top,
   .form-row {
     grid-template-columns: 1fr;
   }
@@ -1316,6 +1315,19 @@ textarea:focus-visible {
 
   .cta-banner {
     padding: 36px 24px;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-col-services {
+    display: none;
   }
 
   .footer-bottom {

@@ -163,7 +163,7 @@ ${bodyHtml}
           <li><a href="/blog/index.html">Blog</a></li>
         </ul>
       </div>
-      <div class="footer-col">
+      <div class="footer-col footer-col-services">
         <h4>Services</h4>
         <ul>
           <li><a href="/services.html">Paid Social</a></li>
@@ -200,7 +200,7 @@ ${bodyHtml}
 <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" defer></script>
 <script>
   window.addEventListener('load', function () {
-    if (window.Calendly) {
+    if (window.Calendly && window.innerWidth > 720) {
       Calendly.initBadgeWidget({
         url: 'https://calendly.com/ernestkinyua-marketing/interview-meeting',
         text: 'Book a Call',
