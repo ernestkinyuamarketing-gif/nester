@@ -1,6 +1,7 @@
 .git
 .github
 .wrangler
+.netlify
 node_modules
 scripts
 package.json
