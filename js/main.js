@@ -132,4 +132,59 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
   }
+
+  // Calendly — its script and styles are only fetched when needed, so they never delay the page
+  const CALENDLY_URL = "https://calendly.com/ernestkinyua-marketing/interview-meeting";
+  let calendlyReady;
+  const loadCalendly = () => {
+    if (!calendlyReady) {
+      calendlyReady = new Promise((resolve, reject) => {
+        const css = document.createElement("link");
+        css.rel = "stylesheet";
+        css.href = "https://assets.calendly.com/assets/external/widget.css";
+        document.head.appendChild(css);
+
+        const js = document.createElement("script");
+        js.src = "https://assets.calendly.com/assets/external/widget.js";
+        js.onload = () => resolve(window.Calendly);
+        js.onerror = reject;
+        document.head.appendChild(js);
+      });
+    }
+    return calendlyReady;
+  };
+
+  // Floating "Book a Call" badge: desktop only, added once the page has finished loading
+  if (window.innerWidth > 720 && !document.body.hasAttribute("data-no-calendly-badge")) {
+    const showBadge = () =>
+      loadCalendly()
+        .then((Calendly) =>
+          Calendly.initBadgeWidget({
+            url: CALENDLY_URL,
+            text: "Book a Call",
+            color: "#f97316",
+            textColor: "#ffffff",
+            branding: true,
+          })
+        )
+        .catch(() => {});
+    window.addEventListener("load", () => {
+      if ("requestIdleCallback" in window) requestIdleCallback(showBadge, { timeout: 4000 });
+      else setTimeout(showBadge, 2000);
+    });
+  }
+
+  // Popup booking links: warm Calendly up on hover/focus, open the popup on click.
+  // Without JS (or if Calendly fails to load) the link still opens the booking page.
+  document.querySelectorAll("[data-calendly-popup]").forEach((link) => {
+    const warmUp = () => loadCalendly().catch(() => {});
+    link.addEventListener("pointerenter", warmUp, { once: true });
+    link.addEventListener("focus", warmUp, { once: true });
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      loadCalendly()
+        .then((Calendly) => Calendly.initPopupWidget({ url: link.href }))
+        .catch(() => window.open(link.href, "_blank", "noopener"));
+    });
+  });
 });

@@ -19,7 +19,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="canonical" href="https://nesteragency.com/case-studies.html">
 
 <link rel="icon" type="image/png" href="assets/images/favicon-32.png" sizes="32x32">
-<link rel="icon" type="image/png" href="assets/images/favicon.png" sizes="512x512">
+<link rel="icon" type="image/png" href="assets/images/favicon-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png">
 <link rel="manifest" href="site.webmanifest">
 
@@ -36,10 +36,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta name="twitter:description" content="Real paid media results from Nester's campaigns for e-commerce, SaaS, and local service brands across Europe, the U.S., and Australia.">
 <meta name="twitter:image" content="https://nesteragency.com/assets/images/og-image.png">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/styles.css">
-<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
 
 <script type="application/ld+json">
 {
@@ -92,7 +91,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <header class="site-header">
   <nav class="nav">
-    <a href="index.html" class="logo"><img src="assets/images/nester-icon.png" alt="Nester Agency logo" class="logo-icon"><span class="logo-text">Nest<span>er</span></span></a>
+    <a href="index.html" class="logo"><img src="assets/images/nester-icon-sm.png" alt="Nester Agency logo" class="logo-icon" width="95" height="68"><span class="logo-text">Nest<span>er</span></span></a>
     <ul class="nav-links" id="primary-navigation">
       <li><a href="index.html">Home</a></li>
       <li><a href="services.html">Services</a></li>
@@ -109,6 +108,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </nav>
 </header>
+
+<main>
 
 <section class="hero" id="main-content" style="padding: 88px 0 72px;">
   <div class="container" style="grid-template-columns: 1fr; text-align:left;">
@@ -246,6 +247,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </section>
 
+</main>
+
 <footer class="site-footer">
   <div class="container">
     <div class="footer-top">
@@ -268,7 +271,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
       <div class="footer-col">
-        <h4>Site</h4>
+        <h3>Site</h3>
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="services.html">Services</a></li>
@@ -278,7 +281,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </ul>
       </div>
       <div class="footer-col footer-col-services">
-        <h4>Services</h4>
+        <h3>Services</h3>
         <ul>
           <li><a href="services.html">Paid Social</a></li>
           <li><a href="services.html">Paid Search</a></li>
@@ -287,7 +290,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Contact</h4>
+        <h3>Contact</h3>
         <ul>
           <li><a href="mailto:ernestkinyua.marketing@gmail.com">ernestkinyua.marketing@gmail.com</a></li>
           <li><a href="contact.html">Get a proposal</a></li>
@@ -311,19 +314,5 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </button>
 
 <script src="js/main.js"></script>
-<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" defer></script>
-<script>
-  window.addEventListener('load', function () {
-    if (window.Calendly && window.innerWidth > 720) {
-      Calendly.initBadgeWidget({
-        url: 'https://calendly.com/ernestkinyua-marketing/interview-meeting',
-        text: 'Book a Call',
-        color: '#f97316',
-        textColor: '#ffffff',
-        branding: true
-      });
-    }
-  });
-</script>
 </body>
 </html>
