@@ -6,23 +6,19 @@
 import { Client } from "@notionhq/client";
 import { NotionToMarkdown } from "notion-to-md";
 import { marked } from "marked";
-import { mkdir, writeFile, readFile } from "node:fs/promises";
+import sharp from "sharp";
+import { mkdir, writeFile, readdir, unlink, access } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { pathToFileURL } from "node:url";
 import path from "node:path";
-
-const NOTION_TOKEN = process.env.NOTION_TOKEN;
-const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
-
-if (!NOTION_TOKEN || !NOTION_DATABASE_ID) {
-  console.error("Missing NOTION_TOKEN or NOTION_DATABASE_ID environment variables.");
-  process.exit(1);
-}
 
 const SITE_URL = "https://nesteragency.com";
 const ROOT = path.resolve(import.meta.dirname, "..");
-const BLOG_DIR = path.join(ROOT, "blog");
+const DEFAULT_AUTHOR = "Ernest Kinyua";
+const IMG_MAX_WIDTH = 1600;
 
-const notion = new Client({ auth: NOTION_TOKEN });
-const n2m = new NotionToMarkdown({ notionClient: notion });
+// No file cache: it keeps image files open, which blocks deleting stale ones on Windows.
+sharp.cache(false);
 
 export function slugify(text) {
   return text
@@ -57,10 +53,83 @@ export function getCoverUrl(page) {
   return null;
 }
 
+// Files uploaded to Notion come back as signed URLs that expire after about an
+// hour, so they're downloaded, resized and served from /blog/images instead.
+// Images linked from elsewhere on the web are left as they are.
+export function isNotionHosted(url) {
+  try {
+    const host = new URL(url).hostname;
+    return ["amazonaws.com", "notion.so", "notion-static.com", "notionusercontent.com"].some(
+      (h) => host === h || host.endsWith(`.${h}`)
+    );
+  } catch {
+    return false;
+  }
+}
+
+async function fileExists(file) {
+  try {
+    await access(file);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function localizeImage(url, imgDir, usedImages) {
+  if (!isNotionHosted(url)) return { src: url };
+
+  // Name the file after its stable location (not the expiring query string), so
+  // re-runs reuse it and replacing the image in Notion produces a new file.
+  const { origin, pathname } = new URL(url);
+  const name = `${createHash("sha1").update(origin + pathname).digest("hex").slice(0, 16)}.webp`;
+  const file = path.join(imgDir, name);
+  usedImages.add(name);
+
+  if (!(await fileExists(file))) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Image download failed (${res.status}): ${pathname}`);
+    const input = Buffer.from(await res.arrayBuffer());
+    await sharp(input, { animated: true })
+      .rotate()
+      .resize({ width: IMG_MAX_WIDTH, withoutEnlargement: true })
+      .webp({ quality: 80 })
+      .toFile(file);
+  }
+
+  const meta = await sharp(file).metadata();
+  return { src: `/blog/images/${name}`, width: meta.width, height: meta.pageHeight || meta.height };
+}
+
+function imgSizeAttrs(img) {
+  return img.width ? ` width="${img.width}" height="${img.height}"` : "";
+}
+
+function absoluteUrl(src) {
+  return src.startsWith("/") ? `${SITE_URL}${src}` : src;
+}
+
+// Post body: the page title is the only <h1>, so Notion headings move down a level,
+// and images are localized and lazy-loaded.
+async function processContentHtml(html, imgDir, usedImages) {
+  html = html.replace(/<(\/?)h([1-5])(?=[\s>])/g, (_, slash, level) => `<${slash}h${Number(level) + 1}`);
+
+  for (const [tag, rawSrc, rest] of [...html.matchAll(/<img src="([^"]+)"([^>]*)>/g)]) {
+    const img = await localizeImage(rawSrc.replace(/&amp;/g, "&"), imgDir, usedImages);
+    html = html.replace(tag, `<img src="${escapeHtml(img.src)}"${rest}${imgSizeAttrs(img)} loading="lazy" decoding="async">`);
+  }
+  return html;
+}
+
+// Embeds JSON-LD safely inside a <script> tag.
+function jsonLdScript(data) {
+  return `<script type="application/ld+json">\n${JSON.stringify(data, null, 2).replace(/</g, "\\u003c")}\n</script>`;
+}
+
 // Shared page shell — mirrors the head/header/footer markup used across the
 // rest of the static site (nav links, GTM snippet, footer columns).
-export function pageShell({ title, description, canonical, ogImage, bodyHtml, activeBlog = false }) {
-  const cover = ogImage || `${SITE_URL}/assets/images/og-image.png`;
+export function pageShell({ title, description, canonical, ogImage, bodyHtml, activeBlog = false, ogType = "article", jsonLd = [] }) {
+  const cover = ogImage ? absoluteUrl(ogImage) : `${SITE_URL}/assets/images/og-image.png`;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,7 +155,7 @@ if('requestIdleCallback' in window){requestIdleCallback(go,{timeout:2000});}else
 <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<meta property="og:type" content="article">
+<meta property="og:type" content="${ogType}">
 <meta property="og:site_name" content="Nester">
 <meta property="og:title" content="${escapeHtml(title)}">
 <meta property="og:description" content="${escapeHtml(description)}">
@@ -102,6 +171,7 @@ if('requestIdleCallback' in window){requestIdleCallback(go,{timeout:2000});}else
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/css/styles.css">
+${jsonLd.map(jsonLdScript).join("\n")}
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -209,7 +279,8 @@ ${bodyHtml}
 `;
 }
 
-export function postPageBody({ title, dateLabel, excerpt, coverUrl, contentHtml }) {
+export function postPageBody({ title, dateLabel, author, excerpt, cover, contentHtml }) {
+  const byline = [dateLabel, author && `By ${escapeHtml(author)}`].filter(Boolean).join(" · ");
   return `<section class="hero" id="main-content" style="padding: 88px 0 56px;">
   <div class="container" style="grid-template-columns: 1fr; text-align:left;">
     <div>
@@ -220,7 +291,7 @@ export function postPageBody({ title, dateLabel, excerpt, coverUrl, contentHtml 
           <li aria-current="page">${escapeHtml(title)}</li>
         </ol>
       </nav>
-      <p class="eyebrow" style="color:#93c5fd;">${dateLabel}</p>
+      <p class="eyebrow" style="color:#93c5fd;">${byline}</p>
       <h1>${escapeHtml(title)}</h1>
       ${excerpt ? `<p>${escapeHtml(excerpt)}</p>` : ""}
     </div>
@@ -229,7 +300,7 @@ export function postPageBody({ title, dateLabel, excerpt, coverUrl, contentHtml 
 
 <section>
   <div class="container" style="max-width: 760px;">
-    ${coverUrl ? `<img src="${coverUrl}" alt="${escapeHtml(title)}" style="width:100%; border-radius:var(--radius); margin-bottom:32px;">` : ""}
+    ${cover ? `<img src="${escapeHtml(cover.src)}" alt="${escapeHtml(title)}"${imgSizeAttrs(cover)} style="width:100%; height:auto; border-radius:var(--radius); margin-bottom:32px;">` : ""}
     <div class="post-body">
       ${contentHtml}
     </div>
@@ -251,7 +322,7 @@ export function indexPageBody(posts) {
   const cards = posts
     .map(
       (p) => `      <a href="/blog/${p.slug}.html" class="card" style="display:block; text-decoration:none;">
-        ${p.coverUrl ? `<img src="${p.coverUrl}" alt="${escapeHtml(p.title)}" style="width:100%; height:180px; object-fit:cover; border-radius:8px; margin-bottom:16px;">` : ""}
+        ${p.cover ? `<img src="${escapeHtml(p.cover.src)}" alt="${escapeHtml(p.title)}"${imgSizeAttrs(p.cover)} loading="lazy" decoding="async" style="width:100%; height:180px; object-fit:cover; border-radius:8px; margin-bottom:16px;">` : ""}
         <p class="eyebrow" style="margin-bottom:8px;">${p.dateLabel}</p>
         <h3>${escapeHtml(p.title)}</h3>
         <p>${escapeHtml(p.excerpt)}</p>
@@ -284,8 +355,7 @@ ${cards || '      <p style="color:var(--color-text-muted);">No posts published y
 </section>`;
 }
 
-async function updateSitemap(posts) {
-  const sitemapPath = path.join(ROOT, "sitemap.xml");
+async function updateSitemap(root, posts) {
   const staticUrls = [
     { loc: `${SITE_URL}/`, priority: "1.0", changefreq: "weekly" },
     { loc: `${SITE_URL}/services.html`, priority: "0.9", changefreq: "monthly" },
@@ -296,58 +366,122 @@ async function updateSitemap(posts) {
     { loc: `${SITE_URL}/blog/index.html`, priority: "0.8", changefreq: "weekly" },
   ];
 
-  const today = new Date().toISOString().slice(0, 10);
-
+  // Static pages carry no <lastmod>: stamping them with the build date would change
+  // the sitemap (and trigger a commit + redeploy) on every sync even when nothing changed.
   const urlEntries = [
     ...staticUrls.map(
-      (u) => `  <url>\n    <loc>${u.loc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>`
+      (u) => `  <url>\n    <loc>${u.loc}</loc>\n    <changefreq>${u.changefreq}</changefreq>\n    <priority>${u.priority}</priority>\n  </url>`
     ),
     ...posts.map(
-      (p) => `  <url>\n    <loc>${SITE_URL}/blog/${p.slug}.html</loc>\n    <lastmod>${p.date ? p.date.slice(0, 10) : today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>`
+      (p) => `  <url>\n    <loc>${SITE_URL}/blog/${p.slug}.html</loc>\n    <lastmod>${p.updated}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>`
     ),
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlEntries.join("\n")}\n</urlset>\n`;
 
-  await writeFile(sitemapPath, xml, "utf-8");
+  await writeFile(path.join(root, "sitemap.xml"), xml, "utf-8");
 }
 
-async function main() {
-  const response = await notion.databases.query({
-    database_id: NOTION_DATABASE_ID,
-    filter: { property: "Published", checkbox: { equals: true } },
-    sorts: [{ property: "Date", direction: "descending" }],
-  });
+async function queryPublishedPages(notion, databaseId) {
+  const pages = [];
+  let cursor;
+  do {
+    const response = await notion.databases.query({
+      database_id: databaseId,
+      filter: { property: "Published", checkbox: { equals: true } },
+      sorts: [{ property: "Date", direction: "descending" }],
+      start_cursor: cursor,
+    });
+    pages.push(...response.results);
+    cursor = response.has_more ? response.next_cursor : undefined;
+  } while (cursor);
+  return pages;
+}
 
-  await mkdir(BLOG_DIR, { recursive: true });
+// Deletes generated files that no longer belong to a published post
+// (unpublished, renamed slug, or replaced image).
+async function removeStale(dir, keep, extension, root) {
+  for (const name of await readdir(dir)) {
+    if (name.endsWith(extension) && !keep.has(name)) {
+      await unlink(path.join(dir, name));
+      console.log(`Removed: /${path.relative(root, path.join(dir, name)).replaceAll(path.sep, "/")}`);
+    }
+  }
+}
 
+export async function build({ notion, n2m, databaseId, root = ROOT }) {
+  const blogDir = path.join(root, "blog");
+  const imgDir = path.join(blogDir, "images");
+  await mkdir(imgDir, { recursive: true });
+
+  const pages = await queryPublishedPages(notion, databaseId);
   const posts = [];
+  const pageFiles = new Set(["index.html"]);
+  const usedImages = new Set();
 
-  for (const page of response.results) {
+  for (const page of pages) {
     const props = page.properties;
     const title = richTextToPlain(props.Name?.title) || "Untitled";
-    const slug = richTextToPlain(props.Slug?.rich_text) || slugify(title);
+    const slug = slugify(richTextToPlain(props.Slug?.rich_text) || title);
     const excerpt = richTextToPlain(props.Excerpt?.rich_text) || "";
-    const date = props.Date?.date?.start || null;
+    const author = richTextToPlain(props.Author?.rich_text) || DEFAULT_AUTHOR;
+    const date = props.Date?.date?.start || page.created_time.slice(0, 10);
+    const updated = page.last_edited_time.slice(0, 10);
+    const canonical = `${SITE_URL}/blog/${slug}.html`;
+
+    if (pageFiles.has(`${slug}.html`)) {
+      throw new Error(`Two published posts share the slug "${slug}". Give one of them a different Slug in Notion.`);
+    }
+
     const coverUrl = getCoverUrl(page);
+    const cover = coverUrl ? await localizeImage(coverUrl, imgDir, usedImages) : null;
 
     const mdBlocks = await n2m.pageToMarkdown(page.id);
     const mdString = n2m.toMarkdownString(mdBlocks);
-    const contentHtml = marked.parse(mdString.parent || "");
+    const contentHtml = await processContentHtml(marked.parse(mdString.parent || ""), imgDir, usedImages);
 
     const dateLabel = formatDate(date);
+    const image = cover ? absoluteUrl(cover.src) : `${SITE_URL}/assets/images/og-image.png`;
 
     const html = pageShell({
       title: `${title} | Nester Blog`,
       description: excerpt || title,
-      canonical: `${SITE_URL}/blog/${slug}.html`,
-      ogImage: coverUrl,
+      canonical,
+      ogImage: cover?.src,
       activeBlog: true,
-      bodyHtml: postPageBody({ title, dateLabel, excerpt, coverUrl, contentHtml }),
+      jsonLd: [
+        {
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: title,
+          description: excerpt || title,
+          image,
+          datePublished: date,
+          dateModified: page.last_edited_time,
+          author: { "@type": "Person", name: author, url: `${SITE_URL}/about.html` },
+          publisher: {
+            "@type": "Organization",
+            name: "Nester",
+            logo: { "@type": "ImageObject", url: `${SITE_URL}/assets/images/nester-icon.png` },
+          },
+          mainEntityOfPage: canonical,
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+            { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog/index.html` },
+            { "@type": "ListItem", position: 3, name: title, item: canonical },
+          ],
+        },
+      ],
+      bodyHtml: postPageBody({ title, dateLabel, author, excerpt, cover, contentHtml }),
     });
 
-    await writeFile(path.join(BLOG_DIR, `${slug}.html`), html, "utf-8");
-    posts.push({ title, slug, excerpt, date, dateLabel, coverUrl });
+    await writeFile(path.join(blogDir, `${slug}.html`), html, "utf-8");
+    pageFiles.add(`${slug}.html`);
+    posts.push({ title, slug, excerpt, date, updated, dateLabel, cover });
 
     console.log(`Built: /blog/${slug}.html`);
   }
@@ -357,17 +491,35 @@ async function main() {
     description: "Practical paid media insights from Nester: Google, Meta, TikTok, and ChatGPT Ads breakdowns from the accounts we run.",
     canonical: `${SITE_URL}/blog/index.html`,
     activeBlog: true,
+    ogType: "website",
     bodyHtml: indexPageBody(posts),
   });
 
-  await writeFile(path.join(BLOG_DIR, "index.html"), indexHtml, "utf-8");
+  await writeFile(path.join(blogDir, "index.html"), indexHtml, "utf-8");
   console.log(`Built: /blog/index.html (${posts.length} posts)`);
 
-  await updateSitemap(posts);
+  await removeStale(blogDir, pageFiles, ".html", root);
+  await removeStale(imgDir, usedImages, ".webp", root);
+
+  await updateSitemap(root, posts);
   console.log("Updated sitemap.xml");
+  return posts;
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+async function main() {
+  const { NOTION_TOKEN, NOTION_DATABASE_ID } = process.env;
+  if (!NOTION_TOKEN || !NOTION_DATABASE_ID) {
+    throw new Error("Missing NOTION_TOKEN or NOTION_DATABASE_ID environment variables.");
+  }
+  const notion = new Client({ auth: NOTION_TOKEN });
+  const n2m = new NotionToMarkdown({ notionClient: notion });
+  await build({ notion, n2m, databaseId: NOTION_DATABASE_ID });
+}
+
+// Only sync when run directly (npm run build:blog), so the module can be imported for testing.
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

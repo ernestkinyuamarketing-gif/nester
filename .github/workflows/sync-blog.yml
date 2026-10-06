@@ -2,7 +2,8 @@ name: Sync blog from Notion
 
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    # Hourly; commits (and so redeploys) only happen when a post actually changed
+    - cron: "0 * * * *"
   workflow_dispatch: {}
 
 permissions:
@@ -16,7 +17,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - run: npm install
 
