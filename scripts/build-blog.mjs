@@ -108,6 +108,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
+<div class="aurora-bg" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
 <header class="site-header">

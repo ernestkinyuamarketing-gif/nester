@@ -1486,3 +1486,359 @@ textarea:focus-visible {
   padding: 2px 6px;
   border-radius: 4px;
 }
+
+/* ---------- Aurora refresh: drifting background, softer cards, pill labels, testimonial marquee ---------- */
+
+:root {
+  --radius: 20px;
+  --blob-1: rgba(37, 99, 235, 0.30);
+  --blob-2: rgba(79, 70, 229, 0.24);
+  --blob-3: rgba(14, 165, 233, 0.24);
+  --blob-4: rgba(249, 115, 22, 0.16);
+  --grid-dot: rgba(15, 23, 42, 0.09);
+  --surface: rgba(255, 255, 255, 0.78);
+  --surface-border: rgba(226, 232, 240, 0.9);
+  --shadow-card: 0 10px 30px rgba(15, 23, 42, 0.05), 0 0 24px rgba(37, 99, 235, 0.05);
+  --shadow-card-hover: 0 18px 44px rgba(15, 23, 42, 0.09), 0 0 32px rgba(37, 99, 235, 0.12);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------- Page background: drifting light + dot grid ---------- */
+.aurora-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--color-bg);
+}
+
+/* Dot grid, fading out towards the edges */
+.aurora-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(var(--grid-dot) 1px, transparent 1.5px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 85%);
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 85%);
+}
+
+/* Soft colour fields: radial gradients instead of filter: blur, so they stay cheap to animate */
+.aurora-bg span {
+  position: absolute;
+  width: 60vmax;
+  height: 60vmax;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.aurora-bg span:nth-child(1) {
+  top: -25vmax;
+  left: -15vmax;
+  background: radial-gradient(circle, var(--blob-1), transparent 65%);
+  animation: aurora-a 26s ease-in-out infinite alternate;
+}
+
+.aurora-bg span:nth-child(2) {
+  top: 10vh;
+  right: -25vmax;
+  background: radial-gradient(circle, var(--blob-2), transparent 65%);
+  animation: aurora-b 32s ease-in-out infinite alternate;
+}
+
+.aurora-bg span:nth-child(3) {
+  bottom: -30vmax;
+  left: 15vw;
+  background: radial-gradient(circle, var(--blob-3), transparent 65%);
+  animation: aurora-c 28s ease-in-out infinite alternate;
+}
+
+.aurora-bg span:nth-child(4) {
+  width: 40vmax;
+  height: 40vmax;
+  bottom: 5vh;
+  right: 5vw;
+  background: radial-gradient(circle, var(--blob-4), transparent 65%);
+  animation: aurora-d 22s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-a {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(30vw, 20vh) scale(1.2); }
+}
+
+@keyframes aurora-b {
+  0% { transform: translate(0, 0) scale(1.1); }
+  100% { transform: translate(-35vw, 25vh) scale(0.9); }
+}
+
+@keyframes aurora-c {
+  0% { transform: translate(0, 0) scale(0.9); }
+  100% { transform: translate(25vw, -35vh) scale(1.15); }
+}
+
+@keyframes aurora-d {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-40vw, -20vh); }
+}
+
+body {
+  background: var(--color-bg);
+}
+
+.section-alt {
+  background: rgba(246, 247, 251, 0.45);
+}
+
+.platforms-strip {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* ---------- Hero: keep the navy, add drifting glow blobs ---------- */
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  left: -140px;
+  bottom: -220px;
+  border-radius: 50%;
+  background: #4f46e5;
+  filter: blur(110px);
+  opacity: 0.28;
+  pointer-events: none;
+  animation: aurora-drift 16s ease-in-out infinite alternate;
+}
+
+@keyframes aurora-drift {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(120px, -60px) scale(1.15); }
+}
+
+.hero-stats {
+  border-radius: 24px;
+}
+
+/* ---------- Eyebrows become pills ---------- */
+.section-head .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 12px;
+  border-radius: 999px;
+  color: var(--color-primary);
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.22);
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.08);
+}
+
+.section-head .eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ---------- Buttons ---------- */
+.btn-primary {
+  background: linear-gradient(135deg, #f97316, #fb8a3c);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(249, 115, 22, 0.3), inset 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #ea580c, #f97316);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.15);
+}
+
+/* ---------- Cards ---------- */
+.card,
+.case-card {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
+}
+
+.card:hover,
+.case-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(37, 99, 235, 0.35);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.case-card-top {
+  background: radial-gradient(circle at 90% 0%, rgba(37, 99, 235, 0.45), transparent 60%), var(--color-dark);
+}
+
+/* Process steps sit on small glass tiles */
+.process-step {
+  padding: 24px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-card);
+}
+
+.process-step::before {
+  background: linear-gradient(135deg, var(--color-primary), #4f46e5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0.8;
+}
+
+/* ---------- FAQ ---------- */
+.faq-item {
+  border-radius: 16px;
+}
+
+/* ---------- CTA banner ---------- */
+.cta-banner {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 85% 15%, rgba(249, 115, 22, 0.28), transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(79, 70, 229, 0.5), transparent 50%),
+    linear-gradient(120deg, var(--color-primary), #1e3a8a);
+  box-shadow: 0 24px 60px rgba(37, 99, 235, 0.25);
+}
+
+/* ---------- Testimonial marquee ---------- */
+.testimonials-section .section-head {
+  margin-bottom: 40px;
+}
+
+.testimonial-marquee {
+  overflow: hidden;
+  padding: 12px 0 24px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+.testimonial-track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  padding: 0 12px;
+  animation: testimonial-scroll 40s linear infinite;
+}
+
+.testimonial-marquee:hover .testimonial-track,
+.testimonial-marquee:focus-within .testimonial-track {
+  animation-play-state: paused;
+}
+
+@keyframes testimonial-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.quote-card {
+  flex-shrink: 0;
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 32px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out), border-color 0.35s var(--ease-out);
+}
+
+.quote-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(37, 99, 235, 0.35);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.quote-mark {
+  width: 36px;
+  height: 36px;
+  color: var(--color-primary);
+  opacity: 0.85;
+}
+
+.quote-card blockquote {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--color-text);
+  flex: 1;
+}
+
+.quote-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-border);
+}
+
+.quote-author .quote-avatar {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--color-primary), #4f46e5);
+}
+
+.quote-author strong {
+  display: block;
+  font-size: 0.92rem;
+  color: var(--color-dark);
+}
+
+.quote-author span {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 720px) {
+  .quote-card {
+    width: 300px;
+    padding: 24px;
+  }
+
+  .hero::before,
+  .aurora-bg span:nth-child(4) {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero::before,
+  .aurora-bg span {
+    animation: none;
+  }
+
+  /* No auto-scroll: let people swipe through the cards instead */
+  .testimonial-marquee {
+    overflow-x: auto;
+  }
+
+  .testimonial-track {
+    animation: none;
+  }
+}
