@@ -252,7 +252,7 @@ ${bodyHtml}
       <div class="footer-col">
         <h3>Contact</h3>
         <ul>
-          <li><a href="mailto:ernestkinyua.marketing@gmail.com">ernestkinyua.marketing@gmail.com</a></li>
+          <li><a href="mailto:contact@nesteragency.com">contact@nesteragency.com</a></li>
           <li><a href="/contact.html">Get a proposal</a></li>
           <li><a href="/privacy.html">Privacy Policy</a></li>
         </ul>

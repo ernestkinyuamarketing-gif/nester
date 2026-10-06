@@ -68,7 +68,7 @@ A note on client naming: don't invent fictional company names to fill in case st
 The form on `contact.html` is wired up to **Web3Forms** (a free form-relay service) plus a hidden honeypot field for spam protection, and submits over AJAX so visitors never leave the page.
 
 **To rotate the access key later:**
-1. Go to [web3forms.com](https://web3forms.com) and enter the email you want submissions sent to (`ernestkinyua.marketing@gmail.com`) to get a new free access key — no account/password needed.
+1. Go to [web3forms.com](https://web3forms.com) and enter the email you want submissions sent to (`contact@nesteragency.com`) to get a new free access key — no account/password needed.
 2. Open `contact.html`, find `<input type="hidden" name="access_key" value="...">`, and replace the value with the new key.
 3. Redeploy. Submissions will then arrive by email automatically; Web3Forms also keeps a dashboard of past submissions.
 
